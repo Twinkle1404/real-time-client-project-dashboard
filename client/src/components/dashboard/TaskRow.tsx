@@ -1,5 +1,5 @@
 import React from 'react';
-import { Task, TaskPriority, TaskStatus, UserSummary } from '../../types/dashboard.types';
+import { Task, TaskPriority, TaskStatus, UserSummary, formatTaskStatusLabel } from '../../types/dashboard.types';
 
 interface TaskRowProps {
   task: Task;
@@ -128,10 +128,10 @@ export const TaskRow: React.FC<TaskRowProps> = ({
                 cursor: 'pointer',
               }}
             >
-              <option value="TODO">TODO</option>
-              <option value="IN_PROGRESS">IN_PROGRESS</option>
-              <option value="IN_REVIEW">IN_REVIEW</option>
-              <option value="DONE">DONE</option>
+              <option value="TODO">To Do</option>
+              <option value="IN_PROGRESS">In Progress</option>
+              <option value="IN_REVIEW">In Review</option>
+              <option value="DONE">Done</option>
             </select>
           ) : (
             <span
@@ -143,7 +143,7 @@ export const TaskRow: React.FC<TaskRowProps> = ({
                 fontWeight: 600,
               }}
             >
-              {task.status}
+              {formatTaskStatusLabel(task.status)}
             </span>
           )}
         </div>

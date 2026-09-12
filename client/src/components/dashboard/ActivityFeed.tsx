@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityItem } from '../../types/dashboard.types';
+import { ActivityItem, formatTaskStatusLabel } from '../../types/dashboard.types';
 
 interface ActivityFeedProps {
   activities: ActivityItem[];
@@ -76,9 +76,9 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
               <div style={{ color: '#64748b' }}>
                 {act.fromStatus && act.toStatus ? (
                   <span>
-                    Status changed: <code style={{ backgroundColor: '#f1f5f9', padding: '1px 4px', borderRadius: '3px' }}>{act.fromStatus}</code> →{' '}
+                    Status changed: <code style={{ backgroundColor: '#f1f5f9', padding: '1px 4px', borderRadius: '3px' }}>{formatTaskStatusLabel(act.fromStatus)}</code> →{' '}
                     <code style={{ backgroundColor: '#e0f2fe', color: '#0369a1', padding: '1px 4px', borderRadius: '3px', fontWeight: 600 }}>
-                      {act.toStatus}
+                      {formatTaskStatusLabel(act.toStatus)}
                     </code>
                   </span>
                 ) : (

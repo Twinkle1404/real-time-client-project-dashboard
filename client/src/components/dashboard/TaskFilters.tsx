@@ -58,10 +58,10 @@ export const TaskFiltersBar: React.FC<TaskFiltersProps> = ({
             }}
           >
             <option value="">All Statuses</option>
-            <option value="TODO">TODO</option>
-            <option value="IN_PROGRESS">IN_PROGRESS</option>
-            <option value="IN_REVIEW">IN_REVIEW</option>
-            <option value="DONE">DONE</option>
+            <option value="TODO">To Do</option>
+            <option value="IN_PROGRESS">In Progress</option>
+            <option value="IN_REVIEW">In Review</option>
+            <option value="DONE">Done</option>
           </select>
         </div>
 

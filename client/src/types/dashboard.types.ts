@@ -81,3 +81,19 @@ export interface ActivityItem {
   description: string;
   createdAt: string;
 }
+
+export const formatTaskStatusLabel = (status: TaskStatus | string | null | undefined): string => {
+  switch (status) {
+    case 'TODO':
+      return 'To Do';
+    case 'IN_PROGRESS':
+      return 'In Progress';
+    case 'IN_REVIEW':
+      return 'In Review';
+    case 'DONE':
+      return 'Done';
+    default:
+      return status || '';
+  }
+};
+

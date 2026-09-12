@@ -161,42 +161,42 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
               onClick={() => setQuickUser('admin@velozity.com')}
               style={quickBtnStyle('#f3e8ff', '#7e22ce')}
             >
-              👑 Admin
+              Admin
             </button>
             <button
               type="button"
               onClick={() => setQuickUser('pm1@velozity.com')}
               style={quickBtnStyle('#eff6ff', '#1d4ed8')}
             >
-              💼 PM 1 (Alice)
+              PM 1 (Alice)
             </button>
             <button
               type="button"
               onClick={() => setQuickUser('pm2@velozity.com')}
               style={quickBtnStyle('#eff6ff', '#1d4ed8')}
             >
-              💼 PM 2 (Bob)
+              PM 2 (Bob)
             </button>
             <button
               type="button"
               onClick={() => setQuickUser('dev1@velozity.com')}
               style={quickBtnStyle('#ecfdf5', '#047857')}
             >
-              💻 Dev 1 (Charlie)
+              Dev 1 (Charlie)
             </button>
             <button
               type="button"
               onClick={() => setQuickUser('dev2@velozity.com')}
               style={quickBtnStyle('#ecfdf5', '#047857')}
             >
-              💻 Dev 2 (Diana)
+              Dev 2 (Diana)
             </button>
             <button
               type="button"
               onClick={() => setQuickUser('dev3@velozity.com')}
               style={quickBtnStyle('#ecfdf5', '#047857')}
             >
-              💻 Dev 3 (Evan)
+              Dev 3 (Evan)
             </button>
           </div>
         </div>
