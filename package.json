@@ -1,0 +1,28 @@
+{
+  "name": "velozity-global-solutions",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Velozity Global Solutions – Technical Hiring Assessment",
+  "scripts": {
+    "dev:server": "npm run dev --workspace=server",
+    "dev:client": "npm run dev --workspace=client",
+    "build:server": "npm run build --workspace=server",
+    "build:client": "npm run build --workspace=client",
+    "build": "npm run build:server && npm run build:client",
+    "prisma:migrate": "npx prisma migrate dev --schema=server/prisma/schema.prisma",
+    "prisma:seed": "npx prisma db seed --schema=server/prisma/schema.prisma",
+    "prisma:studio": "npx prisma studio --schema=server/prisma/schema.prisma",
+    "prisma:validate": "npx prisma validate --schema=server/prisma/schema.prisma",
+    "prisma:generate": "npx prisma generate --schema=server/prisma/schema.prisma",
+    "typecheck": "npm run typecheck --workspace=server",
+    "typecheck:client": "npx tsc --noEmit --project client/tsconfig.json",
+    "test": "npm run test --workspace=server"
+  },
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "prisma": {
+    "seed": "tsx server/prisma/seed.ts"
+  }
+}

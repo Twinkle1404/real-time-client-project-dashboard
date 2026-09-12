@@ -1,0 +1,169 @@
+// ─── Prisma Schema ─── Velozity Global Solutions ───
+// Phase 1: Foundation database schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ───
+
+enum Role {
+  ADMIN
+  PM
+  DEVELOPER
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  IN_REVIEW
+  DONE
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+// ─── Models ───
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         Role
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  // Relations
+  createdProjects Project[]      @relation("ProjectCreator")
+  assignedTasks   Task[]         @relation("TaskAssignee")
+  activityLogs    ActivityLog[]
+  notifications   Notification[]
+  refreshSessions RefreshSession[]
+
+  @@map("users")
+}
+
+model Client {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  projects Project[]
+
+  @@map("clients")
+}
+
+model Project {
+  id        String   @id @default(uuid())
+  name      String
+  clientId  String   @map("client_id")
+  createdBy String   @map("created_by")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  client       Client        @relation(fields: [clientId], references: [id])
+  creator      User          @relation("ProjectCreator", fields: [createdBy], references: [id])
+  tasks        Task[]
+  activityLogs ActivityLog[]
+
+  // Indexes
+  @@index([createdBy])
+  @@map("projects")
+}
+
+model Task {
+  id          String       @id @default(uuid())
+  projectId   String       @map("project_id")
+  assignedTo  String       @map("assigned_to")
+  title       String
+  description String?
+  status      TaskStatus   @default(TODO)
+  priority    TaskPriority @default(MEDIUM)
+  dueDate     DateTime?    @map("due_date")
+  isOverdue   Boolean      @default(false) @map("is_overdue")
+  createdAt   DateTime     @default(now()) @map("created_at")
+
+  // Relations
+  project      Project       @relation(fields: [projectId], references: [id])
+  assignee     User          @relation("TaskAssignee", fields: [assignedTo], references: [id])
+  activityLogs ActivityLog[]
+  notifications Notification[]
+
+  // Indexes
+  @@index([projectId, status])
+  @@index([assignedTo])
+  @@index([dueDate])
+  @@map("tasks")
+}
+
+/// ActivityLog.projectId is intentionally denormalized.
+/// Activity-feed queries are frequently scoped by project, so we store
+/// projectId directly rather than joining through Task every time.
+/// Application logic must keep taskId and projectId consistent.
+model ActivityLog {
+  id                String      @id @default(uuid())
+  taskId            String      @map("task_id")
+  projectId         String      @map("project_id")
+  userId            String      @map("user_id")
+  changeDescription String      @map("change_description")
+  fromStatus        TaskStatus? @map("from_status")
+  toStatus          TaskStatus? @map("to_status")
+  createdAt         DateTime    @default(now()) @map("created_at")
+
+  // Relations
+  task    Task    @relation(fields: [taskId], references: [id])
+  project Project @relation(fields: [projectId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  // Indexes
+  @@index([projectId, createdAt])
+  @@index([taskId])
+  @@index([userId])
+  @@map("activity_logs")
+}
+
+model Notification {
+  id            String   @id @default(uuid())
+  userId        String   @map("user_id")
+  type          String
+  message       String
+  relatedTaskId String?  @map("related_task_id")
+  isRead        Boolean  @default(false) @map("is_read")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user        User  @relation(fields: [userId], references: [id])
+  relatedTask Task? @relation(fields: [relatedTaskId], references: [id])
+
+  // Indexes
+  @@index([userId, isRead])
+  @@map("notifications")
+}
+
+model RefreshSession {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  tokenHash String   @map("token_hash")
+  isRevoked Boolean  @default(false) @map("is_revoked")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Indexes
+  @@index([userId])
+  @@index([tokenHash])
+  @@map("refresh_sessions")
+}
